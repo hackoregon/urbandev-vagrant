@@ -1,0 +1,34 @@
+data:
+  restart: always
+  image: postgres:latest
+  volumes:
+    - /var/lib/postgresql
+    - ./data:/data
+  command: "true"
+
+postgres:
+  restart: always
+  image: postgres:latest
+  volumes_from:
+    - data
+  ports:
+    - "55432:5432"
+
+frontend:
+  restart: always
+  build: ./frontend
+  ports:
+    - "8080:80"
+  links:
+    - postgres
+
+backend:
+  restart: always
+  build: ./backend
+  ports:
+    - "80:80"
+  environment:
+    DBHOST: postgres
+  links:
+    - postgres
+  #command: bash -c "cd /usr/src/app && /usr/local/bin/gunicorn cropcompass:app -w 2 -b :8000 --reload"

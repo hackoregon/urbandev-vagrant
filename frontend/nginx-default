@@ -1,0 +1,21 @@
+server {
+	listen 80 default_server;
+	listen [::]:80 default_server ipv6only=on;
+  gzip on;
+  gzip_proxied any;
+  gzip_types text/css application/x-javascript text/html text/plain text/xml text/javascript;
+  gzip_comp_level 6;
+  gzip_vary on;
+  gzip_disable "MSIE [1-6]\.(?!.*SV1)";
+  etag off;
+
+	# Make site accessible from http://localhost/
+	server_name urbandev.hackoregon.org;
+
+	location / {
+
+		root /usr/src/app/;
+    index index.html
+
+try_files $uri $uri/ =404;
+}
