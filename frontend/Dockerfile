@@ -1,9 +1,10 @@
-FROM ubuntu:14.04
+FROM ubuntu
 MAINTAINER HackOregon
 COPY . /usr/src/app
-RUN apt-get update && apt-get upgrade -y && apt-get install -y build-essential nodejs nodejs-legacy npm nginx
-# RUN cd /usr/src/app && npm install && npm install -g grunt-cli && grunt
-# COPY nginx-default /etc/nginx/sites-enabled/default
-# ADD run.sh /
+RUN apt-get install -y curl
+RUN curl -sL https://deb.nodesource.com/setup | sudo bash -
+RUN apt-get install -y build-essential nodejs nginx
+RUN cd /usr/src/app && npm install && npm install -g grunt-cli && grunt && rm /etc/nginx/sites-enabled/default
+COPY nginx-default /etc/nginx/sites-enabled/default
 WORKDIR /usr/src/app
-# ENTRYPOINT [ "/run.sh" ]
+CMD ["nginx", "-g", "daemon off;"]
